@@ -107,6 +107,13 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
                 }
             }
             let model_0 = NetworkDetailModel.init(title: "RESPONSE SIZE", content: httpModel?.size, url: httpModel?.url.absoluteString, httpModel: httpModel)
+                        //3.
+            let model_10 =   NetworkDetailModel.init(
+                title: "Curl",
+                content: httpModel?.curl ?? "fail to load curl",
+                url: nil, httpModel: nil)
+
+
             //3.
             detailModels.append(model_1)
             detailModels.append(model_2)
@@ -118,6 +125,8 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
             detailModels.append(model_0)
             detailModels.append(model_8)
             detailModels.append(model_9)
+            detailModels.append(model_10)
+
         }
         else {
             //not image:
@@ -147,6 +156,11 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
                 }
             }
             let model_0 = NetworkDetailModel.init(title: "RESPONSE SIZE", content: httpModel?.size, url: httpModel?.url.absoluteString, httpModel: httpModel)
+            let model_10 =   NetworkDetailModel.init(
+                title: "Curl",
+                content: httpModel?.curl ?? "fail to load curl",
+                url: nil, httpModel: nil)
+
             //3.
             detailModels.append(model_1)
             detailModels.append(model_2)
@@ -158,6 +172,7 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
             detailModels.append(model_0)
             detailModels.append(model_8)
             detailModels.append(model_9)
+            detailModels.append(model_10)
         }
     }
     
