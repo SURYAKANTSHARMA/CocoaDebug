@@ -426,6 +426,8 @@ static NSString * kOurRecursiveRequestFlagProperty = @"com.apple.dts.CustomHTTPP
     _HttpModel* model = [[_HttpModel alloc] init];
     model.url = self.request.URL;
     model.method = self.request.HTTPMethod;
+    model.curl = curlCommandFromURLRequest(self.request);
+
     model.mineType = self.response.MIMEType;
     if (self.request.HTTPBody) {
         model.requestData = self.request.HTTPBody;
@@ -1184,6 +1186,33 @@ static NSString * kOurRecursiveRequestFlagProperty = @"com.apple.dts.CustomHTTPP
     }
     
     return model;
+}
+
+NSString *curlCommandFromURLRequest(NSURLRequest *request) {
+    // Get the components of the cURL command
+    NSString *urlString = [request.URL absoluteString];
+    NSString *method = request.HTTPMethod;
+    NSDictionary *headers = request.allHTTPHeaderFields;
+    NSData *body = request.HTTPBody;
+    NSString *bodyString = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
+
+    // Construct the cURL command
+    NSMutableString *curlCommand = [NSMutableString stringWithString:@"curl -X "];
+    [curlCommand appendString:method];
+    [curlCommand appendFormat:@" '%@'", urlString];
+
+    // Add headers
+    for (NSString *key in headers.allKeys) {
+        NSString *value = headers[key];
+        [curlCommand appendFormat:@" -H '%@: %@'", key, value];
+    }
+
+    // Add the request body
+    if (bodyString) {
+        [curlCommand appendFormat:@" -d '%@'", bodyString];
+    }
+
+    return curlCommand;
 }
 
 @end
