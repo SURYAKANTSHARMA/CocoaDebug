@@ -21,7 +21,11 @@ class NetworkViewController: UIViewController {
     var naviItemTitleLabel: UILabel?
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var searchBar: UISearchBar! {
+        didSet {
+            searchBar.barStyle = .black
+        }
+    }
     @IBOutlet weak var deleteItem: UIBarButtonItem!
     @IBOutlet weak var naviItem: UINavigationItem!
     
