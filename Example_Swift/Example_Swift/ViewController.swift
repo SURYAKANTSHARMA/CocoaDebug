@@ -27,6 +27,7 @@ class ViewController: UIViewController {
 
         testHTTP()
         testRedirect()
+        
     }
 
     deinit {

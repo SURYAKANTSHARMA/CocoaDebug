@@ -20,7 +20,7 @@ struct AnalyticsEvent {
     let name: String
     let properties: [String: Any]
     let sdkName: SDKName
-    
+    var timestamp: Date = Date()
 }
 
 // Updated AnalyticsManager
@@ -39,7 +39,6 @@ class CocoaAnalyticsManager {
     }
 }
 
-// Updated AnalyticsView
 struct AnalyticsView: View {
     var events: [AnalyticsEvent]
     
@@ -48,14 +47,29 @@ struct AnalyticsView: View {
             List(events, id: \.name) { event in
                 NavigationLink(destination: EventDetailView(event: event)) {
                     VStack(alignment: .leading) {
-                        Text("Event Name: \(event.name)")
-                        Text("SDK: \(event.sdkName.rawValue)")
+                        HStack {
+                            Text("Event Name: \(event.name)")
+                            Text(event.sdkName.rawValue)
+                                .padding(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+                                .background(SwiftUI.Color.blue.opacity(0.4))
+                                .cornerRadius(6)
+
+                        }
+                        Text("Timestamp: \(event.timestamp, formatter: dateFormatter)")
+                            .font(.footnote)
                     }
                 }
             }
             .navigationTitle("Analytics Events")
         }
     }
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
+        return formatter
+    }()
 }
 
 

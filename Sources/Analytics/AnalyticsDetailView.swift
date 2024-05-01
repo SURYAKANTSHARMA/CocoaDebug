@@ -50,9 +50,9 @@ struct EventDetailView: View {
                     .foregroundColor(.primary)
                 Text("(\(typeTag))")
                     .font(.subheadline)
-                    .padding(.horizontal, 5)
-                    .background(SwiftUI.Color.blue.opacity(0.2))
-                    .cornerRadius(5)
+                    .padding(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+                    .background(SwiftUI.Color.blue.opacity(0.4))
+                    .cornerRadius(6)
             } else {
                 Text("\(value)")
                     .font(.subheadline)
