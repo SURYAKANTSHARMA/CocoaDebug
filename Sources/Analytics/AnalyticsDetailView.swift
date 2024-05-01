@@ -8,67 +8,59 @@
 
 import SwiftUI
 
+import SwiftUI
+import UIKit
+
 struct EventDetailView: View {
     let event: AnalyticsEvent
-
+    
+    @State private var copiedText: String? = nil
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Event Name: \(event.name)")
-                .padding()
-
-            // Display properties
-            ForEach(event.properties.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
-                if let nestedDict = value as? [String: Any] {
-                    // If the value is a dictionary, display its keys and values recursively
-                    VStack(alignment: .leading) {
-                        Text(key)
-                            .font(.headline)
-                        ForEach(nestedDict.sorted(by: { $0.key < $1.key }), id: \.key) { nestedKey, nestedValue in
-                            propertyView(key: nestedKey, value: nestedValue)
-                                .padding(.horizontal)
-                        }
+            HStack {
+                Spacer()
+                Button(action: {
+                    let copyText = "\(event.name)\n\(formattedProperties())"
+                    UIPasteboard.general.string = copyText
+                    copiedText = "Copied!"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        copiedText = nil
                     }
-                } else {
-                    // If the value is not a dictionary, display it directly
-                    propertyView(key: key, value: value)
-                        .padding(.horizontal)
+                }) {
+                    Image(systemName: "doc.on.doc")
                 }
+                .padding()
+                .foregroundColor(.blue)
+                .font(.title)
+            }
+            Text("Event Name: \(event.name)")
+                .fontWeight(.semibold)
+                .padding()
+            ForEach(event.properties.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                Text("\(key): \(value)")
+                    .padding(.horizontal)
             }
             Spacer()
         }
         .navigationBarTitle(Text("Event Details"), displayMode: .inline)
+        .overlay(
+            Text(copiedText ?? "")
+                .foregroundColor(.green)
+                .padding()
+                .opacity(copiedText == nil ? 0 : 1)
+                .animation(.default)
+                .transition(.opacity)
+                .offset(y: -40)
+        )
     }
     
-    @ViewBuilder
-    func propertyView(key: String, value: Any) -> some View {
-        HStack {
-            Text(key)
-                .font(.subheadline)
-            Spacer()
-            if let typeTag = valueTypeTag(value) {
-                Text("\(value)")
-                    .foregroundColor(.primary)
-                Text("(\(typeTag))")
-                    .font(.subheadline)
-                    .padding(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
-                    .background(SwiftUI.Color.blue.opacity(0.4))
-                    .cornerRadius(6)
-            } else {
-                Text("\(value)")
-                    .font(.subheadline)
-            }
+    func formattedProperties() -> String {
+        var formattedText = ""
+        for (key, value) in event.properties.sorted(by: { $0.key < $1.key }) {
+            formattedText += "\(key): \(value)\n"
         }
-    }
-    
-    func valueTypeTag(_ value: Any) -> String? {
-        switch value {
-        case is String: return "String"
-        case is Int: return "Int"
-        case is Double: return "Double"
-        case is Float: return "Float"
-        case is Bool: return "Bool"
-        case is Date: return "Date"
-        default: return nil
-        }
+        return formattedText
     }
 }
+
