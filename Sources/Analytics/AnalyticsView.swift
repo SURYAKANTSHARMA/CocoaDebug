@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+public
 enum SDKName: String {
     case clevertap
     case firebase
@@ -13,21 +15,23 @@ enum SDKName: String {
 }
 
 // Model for Analytics Event
+public
 struct AnalyticsEvent {
     let name: String
     let properties: [String: Any]
     let sdkName: SDKName
     
-    
 }
 
 // Updated AnalyticsManager
-class AnalyticsManager {
-    static let shared = AnalyticsManager()
+public
+class CocoaAnalyticsManager {
+    public
+    static let shared = CocoaAnalyticsManager()
     
     var events: [AnalyticsEvent] = []
 
-    func logEvent(name: String, properties: [String: Any], sdkName: SDKName) {
+    public func logEvent(name: String, properties: [String: Any], sdkName: SDKName) {
         let event = AnalyticsEvent(name: name, properties: properties, sdkName: sdkName)
         events.append(event)
         // Log event to your analytics platform
